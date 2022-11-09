@@ -1,0 +1,19 @@
+{
+    "version": "0.6.1",
+    "tool": "go build -v -trimpath -ldflags '-s -w'",
+    "importpath": "github.com/tekintian/gvm/build",
+    "variables": [
+        {
+            "variable": "Build",
+            "value": "{{.Date}}"
+        },
+        {
+            "variable": "Commit",
+            "value": "{{.GitCommit}}"
+        },
+        {
+            "variable": "Branch",
+            "value": "$(git symbolic-ref --short -q HEAD)"
+        }
+    ]
+}
