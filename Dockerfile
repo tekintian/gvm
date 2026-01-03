@@ -13,6 +13,9 @@ RUN go mod download
 # Copy source code
 COPY . .
 
+# Generate version file from git (if tag exists)
+RUN go run build/gen_version.go || echo "Version generation skipped"
+
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux go build -v -ldflags="-s -w" -o /app/gvm .
 
