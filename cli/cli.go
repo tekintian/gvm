@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/Masterminds/semver"
@@ -103,6 +106,73 @@ func inuse(goroot string) (version string) {
 	return filepath.Base(p)
 }
 
+// getMacOSVersion 获取 macOS 版本号
+func getMacOSVersion() (major, minor int, err error) {
+	if runtime.GOOS != "darwin" {
+		return 0, 0, nil
+	}
+	cmd := exec.Command("sw_vers", "-productVersion")
+	output, err := cmd.Output()
+	if err != nil {
+		return 0, 0, err
+	}
+	version := strings.TrimSpace(string(output))
+	parts := strings.Split(version, ".")
+	if len(parts) < 2 {
+		return 0, 0, fmt.Errorf("invalid macOS version: %s", version)
+	}
+	major, _ = strconv.Atoi(parts[0])
+	minor, _ = strconv.Atoi(parts[1])
+	return major, minor, nil
+}
+
+// checkGoCompatibility 检查 Go 版本兼容性
+// 返回不兼容的原因，如果兼容则返回空字符串
+func checkGoCompatibility(goVersion string) string {
+	// 检查 macOS 兼容性
+	if runtime.GOOS == "darwin" {
+		major, minor, err := getMacOSVersion()
+		if err != nil {
+			return ""
+		}
+		// 获取 Go 版本号
+		v, err := semver.NewVersion(goVersion)
+		if err != nil {
+			return ""
+		}
+
+		// macOS 10.11-10.12 不支持 Go 1.13+
+		if major == 10 && minor <= 12 && minor >= 11 {
+			if v.Major() == 1 && v.Minor() >= 13 {
+				return fmt.Sprintf("requires macOS 10.13+, you are on %d.%d", major, minor)
+			}
+		}
+		// macOS 10.10 及以下不支持 Go 1.7+
+		if major == 10 && minor <= 10 {
+			if v.Major() == 1 && v.Minor() >= 7 {
+				return fmt.Sprintf("requires macOS 10.11+, you are on %d.%d", major, minor)
+			}
+		}
+		// macOS 10.9 及以下不支持 Go 1.5+
+		if major == 10 && minor <= 9 {
+			if v.Major() == 1 && v.Minor() >= 5 {
+				return fmt.Sprintf("requires macOS 10.10+, you are on %d.%d", major, minor)
+			}
+		}
+		// macOS 10.6-10.8 不支持 Go 1.2+
+		if major == 10 && minor <= 8 && minor >= 6 {
+			if v.Major() == 1 && v.Minor() >= 2 {
+				return fmt.Sprintf("requires macOS 10.9+, you are on %d.%d", major, minor)
+			}
+		}
+		// macOS 10.5 及以下不支持 Go 1.0+
+		if major == 10 && minor <= 5 {
+			return fmt.Sprintf("requires macOS 10.6+, you are on %d.%d", major, minor)
+		}
+	}
+	return ""
+}
+
 // render 渲染go版本列表
 func render(curV string, items []*semver.Version, out io.Writer) {
 	sort.Sort(semver.Collection(items))
@@ -124,6 +194,10 @@ func render(curV string, items []*semver.Version, out io.Writer) {
 			color.New(color.FgGreen).Fprintf(out, "* %s\n", v)
 		} else {
 			fmt.Fprintf(out, "  %s\n", v)
+		}
+		// 检查兼容性并显示提示
+		if reason := checkGoCompatibility(v); reason != "" {
+			color.New(color.FgYellow).Fprintf(out, "    [!] %s\n", reason)
 		}
 	}
 }
