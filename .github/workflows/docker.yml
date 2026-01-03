@@ -33,6 +33,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Generate version from git tag
+        shell: bash
+        run: |
+            go run build/gen_version.go
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 

@@ -51,9 +51,11 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Download dependencies
+        shell: bash
         run: go mod download
 
       - name: Generate version from git tag
+        shell: bash
         run: |
           go run build/gen_version.go
 
@@ -84,6 +86,7 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Generate version from git tag
+        shell: bash
         run: |
           go run build/gen_version.go
 
@@ -118,13 +121,16 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Generate version from git tag
+        shell: bash
         run: |
             go run build/gen_version.go
 
       - name: Run tests
+        shell: bash
         run: go test -v ./...
 
       - name: Build
+        shell: bash
         run: |
           echo "Building for ${{ matrix.display }}"
           if [ "$RUNNER_OS" == "macOS" ]; then
@@ -133,10 +139,10 @@ jobs:
           go build -v -ldflags="-s -w"
 
       - name: Test binary
+        shell: bash
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
             ./gvm.exe --version
           else
             ./gvm --version
           fi
-        shell: bash
