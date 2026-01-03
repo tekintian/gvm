@@ -38,7 +38,11 @@ jobs:
       - name: Generate version from git tag
         shell: bash
         run: |
-            go run build/gen_version.go
+            # 执行生成版本命令, 然后从生成的文件 build/version.go 中获取版本信息输出
+            # 从生成的文件 build/version.go 中获取版本信息输出
+            version=$(go run build/gen_version.go | awk '{print $NF}')
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            echo "VERSION=$version"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

@@ -32,7 +32,7 @@ func Run() {
 	app.Name = "gvm"
 	app.Usage = "Golang Version Manager"
 	app.Version = build.Version()
-	app.Copyright = "This is a golang version manager app. Thanks for voidint."
+	app.Copyright = "This is a golang version manager app. More info? visit https://dev.tekin.cn "
 	app.Authors = []*cli.Author{{Name: "TekinTian", Email: "tekintian@gmail.com"}}
 
 	app.Before = func(ctx *cli.Context) (err error) {
