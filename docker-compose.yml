@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  gvm:
+    build: .
+    image: tekintian/gvm:latest
+    container_name: gvm
+    volumes:
+      - gvm-data:/root/.gvm
+    environment:
+      - GVM_MIRROR=https://golang.google.cn/dl/
+    stdin_open: true
+    tty: true
+
+volumes:
+  gvm-data:
+    driver: local

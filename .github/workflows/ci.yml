@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+env:
+  GO_VERSION: '1.21'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            display: "Ubuntu Linux"
+            go-version: '1.20'
+          - os: ubuntu-latest
+            display: "Ubuntu Linux"
+            go-version: '1.21'
+          - os: ubuntu-latest
+            display: "Ubuntu Linux"
+            go-version: '1.22'
+          - os: macos-15
+            display: "macOS (ARM64)"
+            go-version: '1.21'
+          - os: macos-15-intel
+            display: "macOS (Intel)"
+            go-version: '1.21'
+          - os: windows-latest
+            display: "Windows"
+            go-version: '1.20'
+          - os: windows-latest
+            display: "Windows"
+            go-version: '1.21'
+          - os: windows-latest
+            display: "Windows"
+            go-version: '1.22'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run tests
+        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.21'
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.out
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          args: --timeout=5m
+
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            display: "Ubuntu Linux"
+          - os: macos-15
+            display: "macOS (ARM64)"
+          - os: macos-15-intel
+            display: "macOS (Intel)"
+          - os: windows-latest
+            display: "Windows"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build
+        run: |
+          echo "Building for ${{ matrix.display }}"
+          if [ "$RUNNER_OS" == "macOS" ]; then
+            echo "macOS architecture: $(uname -m)"
+          fi
+          go build -v -ldflags="-s -w"
+
+      - name: Test binary
+        run: |
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ./gvm.exe --version
+          else
+            ./gvm --version
+          fi
+        shell: bash
