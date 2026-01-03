@@ -78,7 +78,7 @@ func (c *Collector) FilterVersions(condition string) (items []*version.Version, 
 func (c *Collector) AllVersions() (vers []*version.Version, err error) {
 	items := c.findGoFileItems(c.doc.Find(".table"))
 	if len(items) == 0 {
-		return make([]*version.Version, 0, 0), nil
+		return make([]*version.Version, 0), nil
 	}
 	return convert2Versions(items), nil
 }

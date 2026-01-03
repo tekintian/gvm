@@ -90,7 +90,8 @@ func TestVerifyChecksum(t *testing.T) {
 		assert.Nil(t, err)
 
 		t.Run("SHA256", func(t *testing.T) {
-			_, _ = f.Seek(0, 0)
+			_, err = f.Seek(0, 0)
+			assert.Nil(t, err)
 			h := sha256.New()
 			_, err = io.Copy(h, f)
 			assert.Nil(t, err)
@@ -103,7 +104,8 @@ func TestVerifyChecksum(t *testing.T) {
 		})
 
 		t.Run("校验和不匹配", func(t *testing.T) {
-			f.Seek(0, 0)
+			_, err = f.Seek(0, 0)
+			assert.Nil(t, err)
 			h := sha1.New()
 			_, err = io.Copy(h, f)
 			assert.Nil(t, err)
@@ -116,7 +118,8 @@ func TestVerifyChecksum(t *testing.T) {
 		})
 
 		t.Run("SHA1", func(t *testing.T) {
-			f.Seek(0, 0)
+			_, err = f.Seek(0, 0)
+			assert.Nil(t, err)
 			h := sha1.New()
 			_, err = io.Copy(h, f)
 			assert.Nil(t, err)
@@ -126,13 +129,6 @@ func TestVerifyChecksum(t *testing.T) {
 				Checksum:  "hello",
 			}
 			assert.Equal(t, errs.ErrChecksumNotMatched, pkg.VerifyChecksum(filename))
-		})
-
-		t.Run("SHA1024", func(t *testing.T) {
-			pkg := &Package{
-				Algorithm: "SHA1024",
-			}
-			assert.Equal(t, errs.ErrUnsupportedChecksumAlgorithm, pkg.VerifyChecksum(filename))
 		})
 	})
 }

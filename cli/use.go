@@ -66,13 +66,3 @@ func checkCurrentGoBinary() {
 		fmt.Printf("  2. Then run: source ~/.bashrc (or ~/.zshrc)\n\n")
 	}
 }
-
-// findInPath 在 PATH 列表中查找目录
-func findInPath(pathDirs []string, target string) int {
-	for i, dir := range pathDirs {
-		if dir == target {
-			return i
-		}
-	}
-	return -1
-}
