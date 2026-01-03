@@ -14,14 +14,20 @@ RUN go mod download
 COPY . .
 
 # Generate version file from git (if tag exists), otherwise create default version
-# RUN go run build/gen_version.go || \
-#     (mkdir -p build && \
-#      echo 'package build' > build/version.go && \
-#      echo '' >> build/version.go && \
-#      echo 'const (' >> build/version.go && \
-#      echo '  // ShortVersion 短版本号（Docker 构建）' >> build/version.go && \
-#      echo '  ShortVersion = "0.0.0-docker"' >> build/version.go && \
-#      echo ')' >> build/version.go)
+# 如果 build/version.go 已存在(由 CI/CD 预先生成),则直接使用;否则从 git 生成
+RUN if [ -f build/version.go ]; then \
+      echo "Using pre-generated version file"; \
+    else \
+      echo "Generating version from git..."; \
+      go run build/gen_version.go || \
+      (mkdir -p build && \
+       echo 'package build' > build/version.go && \
+       echo '' >> build/version.go && \
+       echo 'const (' >> build/version.go && \
+       echo '  // ShortVersion 短版本号（Docker 构建）' >> build/version.go && \
+       echo '  ShortVersion = "0.0.0-docker"' >> build/version.go && \
+       echo ')' >> build/version.go); \
+    fi
 
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux go build -v -ldflags="-s -w" -o /app/gvm .
