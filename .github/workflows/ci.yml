@@ -58,6 +58,7 @@ jobs:
           go run build/gen_version.go
 
       - name: Run tests
+        shell: bash
         run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
 
       - name: Upload coverage to Codecov
@@ -115,17 +116,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
-
-      - name: Get version
-        id: version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="dev-$(date +%Y%m%d)"
-          else
-            VERSION=${GITHUB_REF#refs/tags/v}
-          fi
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
 
       - name: Generate version from git tag
         run: |
