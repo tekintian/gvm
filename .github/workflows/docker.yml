@@ -1,12 +1,15 @@
 name: Docker Build
 
 on:
-  push:
-    branches: [ master, main ]
-    tags:
-      - 'v*'
-  pull_request:
-    branches: [ master, main ]
+  # push:
+  #   branches: [ master, main ]
+  #   tags:
+  #     - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build'
+        required: true
 
 env:
   GO_VERSION: '1.21'
