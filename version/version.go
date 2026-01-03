@@ -11,9 +11,23 @@ import (
 )
 
 // FindVersion 返回指定名称的版本
+// 支持匹配去除尾部 .0 的版本号（如 1.24 匹配 1.24.0）
 func FindVersion(all []*Version, name string) (*Version, error) {
+	// 先尝试精确匹配
 	for i := range all {
 		if all[i].Name == name {
+			return all[i], nil
+		}
+	}
+	// 精确匹配失败后，尝试匹配去除尾部 .0 的版本
+	normalizedName := strings.TrimSuffix(name, ".0")
+	for i := range all {
+		if all[i].Name == normalizedName {
+			return all[i], nil
+		}
+		// 如果存储的版本名末尾有 .0，也尝试匹配
+		trimmedStored := strings.TrimSuffix(all[i].Name, ".0")
+		if trimmedStored == name {
 			return all[i], nil
 		}
 	}

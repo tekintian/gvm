@@ -107,12 +107,19 @@ func inuse(goroot string) (version string) {
 func render(curV string, items []*semver.Version, out io.Writer) {
 	sort.Sort(semver.Collection(items))
 
+	// 使用 map 去重
+	seen := make(map[string]bool)
 	for i := range items {
 		fields := strings.SplitN(items[i].String(), "-", 2)
-		v := strings.TrimSuffix(strings.TrimSuffix(fields[0], ".0"), ".0")
+		v := fields[0]
 		if len(fields) > 1 {
-			v += fields[1]
+			v += "-" + fields[1]
 		}
+		// 如果已经显示过该版本，跳过
+		if seen[v] {
+			continue
+		}
+		seen[v] = true
 		if v == curV {
 			color.New(color.FgGreen).Fprintf(out, "* %s\n", v)
 		} else {
