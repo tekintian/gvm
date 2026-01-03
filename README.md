@@ -1,181 +1,268 @@
 # gvm
 
+<p align="center">
+  <img src="https://img.shields.io/badge/go-v1.21+-00ADD8E?style=flat&logo=go" alt="Go Version">
+  <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-4E71EE?style=flat" alt="Platform">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat" alt="License">
+  <img src="https://img.shields.io/github/v/release/tekintian/gvm?color=brightgreen" alt="Release">
+</p>
 
-**注意：**`master`分支可能处于开发之中并**非稳定版本**，请通过 tag 下载稳定版本的源代码，或通过[release](https://github.com/tekintian/gvm/releases)下载已编译的二进制可执行文件。
+<div align="center">
 
-`g`是一个 Linux、macOS、Windows 下的命令行工具，可以提供一个便捷的多版本 [go](https://golang.org/) 环境的管理和切换。
+**🚀 The Fast and Simple Go Version Manager for Developers**
 
+</div>
 
-## 特性
+<p align="center">
+  <a href="#-installation">Installation</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-faq">FAQ</a> •
+  <a href="https://github.com/tekintian/gvm/tree/master/docs">📚 Documentation</a>
+</p>
 
-- 支持列出可供安装的 go 版本号
-- 支持列出已安装的 go 版本号
-- 支持在本地安装多个 go 版本
-- 支持卸载已安装的 go 版本
-- 支持在已安装的 go 版本之间自由切换
-- 支持软件自我更新（>= 1.3.0）
+---
 
-## 安装
+**Note:** The `master` branch may be under development and is **not a stable version**. Please download the source code of a stable version via a tag, or download the compiled binary from [releases](https://github.com/tekintian/gvm/releases).
 
-### 自动化安装
+`gvm` is a lightweight command-line tool for Linux, macOS, and Windows that provides convenient management and switching of multiple versions of [Go](https://golang.org/). 🎯
 
-- Linux/macOS（适用于 bash、zsh）
+## ✨ Highlights
 
-  ```shell
-  # 建议安装前清空`GOROOT`、`GOBIN`等环境变量
-  $ curl -sSL https://raw.githubusercontent.com/tekintian/gvm/master/install.sh | bash
-  $ echo "unalias gvm" >> ~/.bashrc # 可选。若其他程序（如'git'）使用了'gvm'作为别名。
-  $ source ~/.bashrc # 或者 source ~/.zshrc
-  ```
+- 🚀 **Blazing Fast** - Quick installation and switching between Go versions
+- 🔄 **Seamless Switching** - Switch between Go versions with a single command
+- 🌐 **Cross-Platform** - Works on Linux, macOS, and Windows
+- 🔒 **Secure** - Automatic checksum verification for all downloads
+- 💾 **Space Efficient** - Download once, install multiple versions
+- 🛠️ **Smart Features** - macOS version compatibility detection, PATH validation, and more
 
-### 手动安装
+## 📦 Installation
 
-- 下载[release](https://github.com/tekintian/gvm/releases)的二进制压缩包
-- 将压缩包解压至`PATH`环境变量目录下（如`/usr/local/bin`）
-- 编辑 shell 环境配置文件（如`~/.bashrc`、`~/.zshrc`...）
+### One-Line Installation (Recommended)
 
-  ```shell
-  $ cat>>~/.bashrc<<'EOF'
-  export GOROOT="${HOME}/.gvm/go"
-  export PATH="${HOME}/.gvm/go/bin:$PATH"
-  export GVM_MIRROR=https://golang.google.cn/dl/
-  EOF
-  ```
+**Linux / macOS**
 
-- 启用环境变量
-  ```shell
-  $ source ~/.bashrc # 或source ~/.zshrc
-  ```
-
-## 使用
-
-查询当前可供安装的`stable`状态的 go 版本
-
-```shell
-$ gvm ls-remote stable
-  1.13.15
-  1.14.7
+```bash
+curl -sSL https://raw.githubusercontent.com/tekintian/gvm/master/install.sh | bash
 ```
 
-安装目标 go 版本`1.14.7`
+**Windows**
 
-```shell
-$ gvm install 1.14.7
-Downloading 100% |███████████████| (119/119 MB, 9.939 MB/s) [12s:0s]
-Computing checksum with SHA256
-Checksums matched
-Now using go1.14.7
+```powershell
+# Download from releases and run the installer
+# See https://github.com/tekintian/gvm/releases
 ```
 
-查询已安装的 go 版本
+### Manual Installation
 
-```shell
-$ gvm ls
-  1.7.6
-  1.11.13
-  1.12.17
-  1.13.15
-  1.14.6
-* 1.14.7
+1. Download the binary from [releases](https://github.com/tekintian/gvm/releases)
+2. Extract to a directory in your `PATH` (e.g., `/usr/local/bin`)
+3. Add to your shell profile (`~/.bashrc` or `~/.zshrc`):
+
+```bash
+cat >> ~/.bashrc <<'EOF'
+export GOROOT="${HOME}/.gvm/go"
+export PATH="${HOME}/.gvm/go/bin:$PATH"
+export GVM_MIRROR=https://golang.google.cn/dl/
+EOF
 ```
 
-查询可供安装的所有 go 版本
+4. Reload your shell:
 
-```shell
-$ gvm ls-remote
-  1
-  1.2.2
-  1.3
-  1.3.1
-  ...    // 省略若干版本
-  1.14.5
-  1.14.6
-* 1.14.7
-  1.15rc1
+```bash
+source ~/.bashrc
 ```
 
-切换到另一个已安装的 go 版本
+## 🚀 Quick Start
 
-```shell
-$ gvm use 1.14.6
-go version go1.14.6 darwin/amd64
+```bash
+# List available stable versions
+gvm ls-remote stable
+
+# Install Go 1.21.0
+gvm install 1.21.0
+
+# List installed versions
+gvm ls
+
+# Switch to Go 1.21.0
+gvm use 1.21.0
+
+# Verify the version
+go version
 ```
 
-卸载一个已安装的 go 版本
+## 📚 Usage
 
-```shell
-$ gvm uninstall 1.14.7
-Uninstalled go1.14.7
+### List Available Go Versions
+
+```bash
+# List stable versions only
+gvm ls-remote stable
+
+# List all available versions (including beta, rc, archived)
+gvm ls-remote
+
+# List specific channel
+gvm ls-remote rc
+gvm ls-remote beta
 ```
 
-更新 gvm 软件本身
+### Install Go Versions
 
-```shell
-$ gvm update
-A new version of gvm(v1.2.2) is available
-Downloading 100% |███████████████| (3.7/3.7 MB, 2.358 MB/s)
-Computing checksum with SHA256
-Checksums matched
-Update completed
+```bash
+# Install specific version
+gvm install 1.21.0
+
+# Install with short version (gvm will auto-match 1.21.0)
+gvm install 1.21
 ```
 
-## FAQ
+### Manage Installed Versions
 
-- 环境变量`GVM_MIRROR`有什么作用？
+```bash
+# List all installed versions
+gvm ls
 
-  由于中国大陆无法自由访问 Golang 官网，导致查询及下载 go 版本都变得困难，因此可以通过该环境变量指定一个或多个镜像站点（多个镜像站点之间使用英文逗号分隔），gvm 将从该站点查询、下载可用的 go 版本。已知的可用镜像站点如下：
+# Switch to a version
+gvm use 1.21.0
 
-  - Go 官方镜像站点：https://golang.google.cn/dl/
-  - Go 语言中文网：https://studygolang.com/dl
-  - 阿里云开源镜像站点：https://mirrors.aliyun.com/golang/
+# Uninstall a version
+gvm uninstall 1.21.0
+```
 
-- 环境变量`GVM_EXPERIMENTAL`有什么作用？
+### Update gvm
 
-  当该环境变量的值为`true`时，将**开启所有的实验特性**。
+```bash
+# Check for updates
+gvm update
+```
 
-- 环境变量`GVM_HOME`有什么作用？
+## ⚙️ Features
 
-  按照惯例，gvm 默认会将`~/.gvm`目录作为其家目录。若想自定义家目录（Windows 用户需求强烈），可使用该环境变量切换到其他家目录。由于**该特性还属于实验特性**，需要先开启实验特性开关`GVM_EXPERIMENTAL=true`才能生效。特别注意，该方案并不十分完美，因此才将其归类为实验特性，详见[#18](https://github.com/tekintian/gvm/issues/18)。
+- ✅ List available Go versions for installation
+- ✅ List installed Go versions
+- ✅ Install multiple Go versions locally
+- ✅ Uninstall installed Go versions
+- ✅ Switch freely between installed Go versions
+- ✅ Self-update support (>= 1.3.0)
+- ✅ Cross-platform support (Linux, macOS, Windows)
+- ✅ macOS version compatibility detection
+- ✅ Duplicate version filtering
+- ✅ Complete version display (e.g., 1.24.0)
+- ✅ Short version matching (e.g., `1.24` matches `1.24.0`)
+- ✅ PATH configuration validation
+- ✅ Network proxy support
+- ✅ Checksum verification
 
-- macOS 系统下安装 go 版本，gvm 抛出`[gvm] Installation package not found`字样的错误提示，是什么原因？
+## 🌐 Platform Support
 
-  Go 官方在**1.16**版本中才[加入了对 ARM 架构的 macOS 系统的支持](https://go.dev/doc/go1.16#darwin)。因此，ARM 架构的 macOS 系统下均无法安装 1.15 及以下的版本的 go 安装包。若尝试安装这些版本，gvm 会抛出`[gvm] Installation package not found`的错误信息。
+| Platform | Architectures | Minimum OS Version |
+|----------|---------------|-------------------|
+| Linux | 386, amd64, arm, arm64, s390x | All distributions |
+| macOS | amd64, arm64 | 10.13+ (Intel), 11.0+ (ARM) |
+| Windows | 386, amd64, arm, arm64 | Vista+ |
 
-- 是否支持网络代理？
+## 🔧 Configuration
 
-  支持。可在`HTTP_PROXY`、`HTTPS_PROXY`、`http_proxy`、`https_proxy`等环境变量中设置网络代理地址。
+### Environment Variables
 
-- 支持哪些 Windows 版本？
+| Variable | Description | Default |
+|----------|-------------|----------|
+| `GVM_MIRROR` | Mirror site for downloading Go | - |
+| `GVM_HOME` | Custom home directory for gvm | `~/.gvm` |
+| `GVM_EXPERIMENTAL` | Enable experimental features | `false` |
 
-  因为`g`的实现上依赖于`符号链接`，因此操作系统必须是`Windows Vista`及以上版本。
+### Mirror Sites
 
-- Windows 版本安装以后不生效？
+If you're in China or need faster downloads, use one of these mirrors:
 
-  这有可能是因为没有把下载安装的加入到 `$Path` 的缘故，需要手动将 `$Path` 纳入到用户的环境变量中。为了方便起见，可以使用项目中的 `path.ps1` 的 PowerShell 脚本运行然后重新启动计算机即可。
+```bash
+export GVM_MIRROR=https://golang.google.cn/dl/
+# or
+export GVM_MIRROR=https://studygolang.com/dl
+# or
+export GVM_MIRROR=https://mirrors.aliyun.com/golang/
+```
 
-- 支持源代码编译安装吗？
+## 🐳 Docker Support
 
-  不支持
+```bash
+# Pull the image
+docker pull tekintian/gvm:latest
 
-## 鸣谢
+# Run gvm in container
+docker run --rm -v gvm-data:/root/.gvm tekintian/gvm ls-remote
 
-感谢[nvm](https://github.com/nvm-sh/nvm)、[n](https://github.com/tj/n)、[rvm](https://github.com/rvm/rvm)等工具提供的宝贵思路。
+# Using docker-compose
+docker-compose up -d
+docker-compose exec gvm gvm install 1.21.0
+```
 
+## ❓ FAQ
 
-# goquery 使用
-https://github.com/PuerkitoBio/goquery
+### Why use gvm instead of official Go installer?
 
-~~~go
-// 这个doc选择的内容为id="archive"元素下面的样式为.expanded下的div
-	// <div id="archive"><div class="expanded""><div xxx></div></div></div>
-	// divsArchive := c.doc.Find("#archive").ChildrenFiltered(".expanded").Find("div")
-	// 查询id为archive下面的所有div的class为toggle的div元素
-divsArchive := c.doc.Find("#archive").Find("div.toggle")
+- **Multiple versions**: Install and switch between multiple Go versions easily
+- **Fast switching**: Switch versions with a single command
+- **No manual setup**: Automatic PATH configuration and symlink management
+- **Cross-platform**: Works consistently across Linux, macOS, and Windows
 
-// 查询所有id为archive的元素下面的所有class为toggle的div元素
-doc.Find("#archive").Find("div.toggle").Each(func(i int, div *goquery.Selection) {
+### What is the purpose of the `GVM_MIRROR` environment variable?
 
-}
-~~~
+Due to access restrictions to the official Go website in some regions, querying and downloading Go versions can be difficult. This environment variable allows you to specify one or more mirror sites (separated by commas). gvm will query and download available Go versions from these sites.
 
+### What is the purpose of the `GVM_EXPERIMENTAL` environment variable?
+
+When this environment variable is set to `true`, **all experimental features are enabled**.
+
+### What is the purpose of the `GVM_HOME` environment variable?
+
+By convention, gvm uses the `~/.gvm` directory as its home directory. If you want to customize the home directory, you can use this environment variable to switch to another directory. Since **this feature is still experimental**, you need to enable `GVM_EXPERIMENTAL=true` for it to take effect.
+
+### When installing Go on macOS, gvm throws `[gvm] Installation package not found`?
+
+The official Go website only [added support for ARM architecture macOS systems in version 1.16](https://go.dev/doc/go1.16#darwin). Therefore, Go installation packages version 1.15 and below cannot be installed on ARM architecture macOS systems.
+
+### Does it support network proxy?
+
+Yes. You can set network proxy addresses in `HTTP_PROXY`, `HTTPS_PROXY`, `http_proxy`, `https_proxy` environment variables.
+
+### Which Windows versions are supported?
+
+Since the implementation of `gvm` depends on `symbolic links`, the operating system must be `Windows Vista` or higher.
+
+### Windows version doesn't work after installation?
+
+This may be because the downloaded installation was not added to `$PATH`. You need to manually include `$PATH` in the user's environment variables. For convenience, run the PowerShell script `path.ps1` provided in the project and restart your computer.
+
+### Does it support building from source?
+
+No, it does not support building from source.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+Thanks to these amazing projects for providing valuable ideas:
+
+- [nvm](https://github.com/nvm-sh/nvm) - Node Version Manager
+- [n](https://github.com/tj/n) - Node version management
+- [rvm](https://github.com/rvm/rvm) - Ruby Version Manager
+
+---
+
+<div align="center">
+
+**Made with ❤️ by [TekinTian](https://github.com/tekintian)**
+
+[⬆ Back to Top](#gvm)
+
+</div>
 
