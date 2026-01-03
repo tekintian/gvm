@@ -39,6 +39,10 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
 
+      - name: Generate version from git tag
+        run: |
+          go run build/gen_version.go
+
       - name: Build Linux
         run: |
           CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -v -ldflags="-s -w" -o bin/gvm${{ steps.version.outputs.VERSION }}.linux-386

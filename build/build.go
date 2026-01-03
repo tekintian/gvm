@@ -1,11 +1,8 @@
+//go:generate go run gen_version.go
+
 package build
 
 import "strings"
-
-const (
-	// ShortVersion 短版本号
-	ShortVersion = "1.5.0"
-)
 
 // The value of variables come form `gb build -ldflags '-X "build.Build=xxxxx" -X "build.CommitID=xxxx"' `
 var (

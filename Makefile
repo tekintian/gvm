@@ -2,17 +2,21 @@ GO = CGO_ENABLED=0 GO111MODULE=on GOPROXY=https://goproxy.cn,direct go
 BUILD_DATE := $(shell date '+%Y-%m-%d %H:%M:%S')
 GIT_BRANCH := $(shell git symbolic-ref --short -q HEAD)
 GIT_COMMIT_HASH := $(shell git rev-parse HEAD|cut -c 1-8)
-GO_FLAGS := -v -ldflags="-X 'github.com/tekintian/gvm/build.Build=$(BUILD_DATE)' -X 'github.com/tekintian/gvm/build.Commit=$(GIT_COMMIT_HASH)' -X 'github.com/tekintian/gvm/build.Branch=$(GIT_BRANCH)'"
+GO_FLAGS := -v -ldflags="-s -w -X 'github.com/tekintian/gvm/build.Build=$(BUILD_DATE)' -X 'github.com/tekintian/gvm/build.Commit=$(GIT_COMMIT_HASH)' -X 'github.com/tekintian/gvm/build.Branch=$(GIT_BRANCH)'"
 
 
 all: install test clean
 
-build:
+# 生成版本号（从 git tag）
+gen-version:
+	$(GO) run build/gen_version.go
+
+build: gen-version
 	$(GO) build $(GO_FLAGS)
 	# 移动到 ~/.gvm/bin/目录
 	mv gvm ~/.gvm/bin/
 
-install: build
+install: gen-version
 	$(GO) install $(GO_FLAGS)
 
 build-all: build-linux build-darwin build-windows
@@ -58,4 +62,4 @@ clean:
 	rm -f sha256sum.txt
 	rm -rf bin
 
-.PHONY: all build install test package clean build-linux build-darwin build-windows build-linux-386 build-linux-amd64 build-linux-arm build-linux-arm64 build-linux-s390x build-darwin-amd64 build-darwin-arm64 build-windows-386 build-windows-amd64 build-windows-arm build-windows-arm64
+.PHONY: all build install test package clean gen-version build-linux build-darwin build-windows build-linux-386 build-linux-amd64 build-linux-arm build-linux-arm64 build-linux-s390x build-darwin-amd64 build-darwin-arm64 build-windows-386 build-windows-amd64 build-windows-arm build-windows-arm64
