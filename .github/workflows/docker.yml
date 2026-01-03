@@ -1,4 +1,4 @@
-name: Docker Build
+name: Docker GVM Build
 
 on:
   push:
@@ -74,7 +74,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
-        uses: docker/app_build-push-action@v5
+        uses: docker/build-push-action@v5
         with:
           context: .
           platforms: ${{ matrix.platform }}
