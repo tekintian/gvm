@@ -38,9 +38,9 @@ jobs:
       - name: Generate version from git tag
         shell: bash
         run: |
-            # 执行生成版本命令, 然后从生成的文件 build/version.go 中获取版本信息输出
-            # 从生成的文件 build/version.go 中获取版本信息输出
-            version=$(go run build/gen_version.go | awk '{print $NF}')
+            # 执行生成版本命令, 然后从生成的文件 app_build/version.go 中获取版本信息输出
+            # 从生成的文件 app_build/version.go 中获取版本信息输出
+            version=$(go run app_build/gen_version.go | awk '{print $NF}')
             echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
             echo "VERSION=$version"
 
@@ -74,7 +74,7 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/app_build-push-action@v5
         with:
           context: .
           platforms: ${{ matrix.platform }}

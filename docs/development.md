@@ -25,7 +25,7 @@ go mod download
 
 ```
 gvm/
-├── build/              # 版本管理
+├── app_build/              # 版本管理
 │   ├── build.go       # 构建信息和版本
 │   └── gen_version.go # 版本号生成器
 ├── cli/               # 命令行界面
@@ -76,7 +76,7 @@ make build-all
 
 ```bash
 # 生成版本号
-go run build/gen_version.go
+go run app_build/gen_version.go
 
 # 构建
 go build
@@ -261,8 +261,8 @@ return errors.Wrap(err, "failed to parse version")
 
 ```bash
 # 无 tag 时
-go run build/gen_version.go
-# 输出：Generated build/version.go with version: 0.0.0-e93d469
+go run app_build/gen_version.go
+# 输出：Generated app_build/version.go with version: 0.0.0-e93d469
 
 ./gvm --version
 # 输出：gvm version 0.0.0-e93d469
@@ -274,8 +274,8 @@ go run build/gen_version.go
 
 ```bash
 git tag v1.6.0
-go run build/gen_version.go
-# 输出：Generated build/version.go with version: 1.6.0
+go run app_build/gen_version.go
+# 输出：Generated app_build/version.go with version: 1.6.0
 ```
 
 详见 [版本管理文档](./version-management.md)。

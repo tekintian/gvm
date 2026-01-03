@@ -26,7 +26,7 @@ gvm 使用 `go generate` 机制自动从 git tag 生成版本号，这是 Go 社
 ### 文件结构
 
 ```
-build/
+app_build/
 ├── build.go           # 主文件，包含 //go:generate 指令
 ├── gen_version.go     # 版本号生成器
 └── version.go         # 自动生成（gitignore）
@@ -53,7 +53,7 @@ make install
 
 ```bash
 # 手动生成版本号
-go run build/gen_version.go
+go run app_build/gen_version.go
 
 # 编译
 go build
@@ -68,7 +68,7 @@ git push origin v1.6.0
 
 # 2. CI/CD 自动执行
 # - 检出代码（包含 tag）
-# - 生成版本号：go run build/gen_version.go
+# - 生成版本号：go run app_build/gen_version.go
 # - 编译多平台二进制文件
 # - 生成校验和（sha256sum.txt）
 # - 创建 GitHub Release
@@ -97,7 +97,7 @@ gvm version 1.6.0
 ```yaml
 - name: Generate version from git tag
   run: |
-    go run build/gen_version.go
+    go run app_build/gen_version.go
 
 - name: Build
   run: |
@@ -145,8 +145,8 @@ gvm update
 
 ## 注意事项
 
-1. **首次构建**：需要先运行 `make gen-version` 或 `go run build/gen_version.go`
-2. **生成的文件**：`build/version.go` 已加入 `.gitignore`，不会提交到 git
+1. **首次构建**：需要先运行 `make gen-version` 或 `go run app_build/gen_version.go`
+2. **生成的文件**：`app_build/version.go` 已加入 `.gitignore`，不会提交到 git
 3. **版本一致性**：确保 git tag 与预期版本号一致
 4. **CI/CD**：使用 `git checkout --fetch-depth=0` 确保检出所有 tags
 
@@ -162,13 +162,13 @@ A: 使用 `go generate` 的优势：
 
 ### Q: 如何验证版本号是否正确？
 
-A: 
+A:
 ```bash
 # 查看 git tag
 git describe --tags --abbrev=0
 
 # 查看生成的版本号
-cat build/version.go
+cat app_build/version.go
 
 # 查看编译后的二进制版本
 ./gvm --version

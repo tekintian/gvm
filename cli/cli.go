@@ -13,7 +13,7 @@ import (
 
 	"github.com/Masterminds/semver"
 	"github.com/fatih/color"
-	"github.com/tekintian/gvm/build"
+	app_build "github.com/tekintian/gvm/app_build"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
@@ -31,7 +31,7 @@ func Run() {
 	app := cli.NewApp()
 	app.Name = "gvm"
 	app.Usage = "Golang Version Manager"
-	app.Version = build.Version()
+	app.Version = app_build.Version()
 	app.Copyright = "This is a golang version manager app. More info? visit https://dev.tekin.cn "
 	app.Authors = []*cli.Author{{Name: "TekinTian", Email: "tekintian@gmail.com"}}
 
@@ -80,7 +80,7 @@ func init() {
 
  COPYRIGHT:
 	{{.Copyright}}{{end}}
-`, build.ShortVersion)
+`, app_build.ShortVersion)
 }
 
 const (

@@ -25,7 +25,7 @@
 
 ```
 gvm/
-├── build/              # 构建和版本管理
+├── app_build/              # 构建和版本管理
 │   ├── build.go       # 构建信息
 │   └── gen_version.go # 版本号生成器
 ├── cli/               # 命令行界面
@@ -123,7 +123,7 @@ docker run --rm -v gvm-data:/root/.gvm tekintian/gvm ls-remote
 make build
 
 # 使用 Go
-go run build/gen_version.go
+go run app_build/gen_version.go
 go build
 ```
 

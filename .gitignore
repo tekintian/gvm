@@ -17,4 +17,4 @@ bin
 dest
 
 # Auto-generated version file
-build/version.go
+app_build/version.go

@@ -163,7 +163,7 @@ jobs:
 
       - name: Generate version from git tag
         run: |
-          go run build/gen_version.go
+          go run app_build/gen_version.go
 
       - name: Build
         run: |

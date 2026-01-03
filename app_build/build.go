@@ -1,10 +1,10 @@
 //go:generate go run gen_version.go
 
-package build
+package app_build
 
 import "strings"
 
-// The value of variables come form `gb build -ldflags '-X "build.Build=xxxxx" -X "build.CommitID=xxxx"' `
+// The value of variables come form `gb build -ldflags '-X "app_build.Build=xxxxx" -X "app_build.CommitID=xxxx"' `
 var (
 	// Build build time
 	Build string

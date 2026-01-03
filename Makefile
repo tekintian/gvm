@@ -2,14 +2,14 @@ GO = CGO_ENABLED=0 GO111MODULE=on GOPROXY=https://goproxy.cn,direct go
 BUILD_DATE := $(shell date '+%Y-%m-%d %H:%M:%S')
 GIT_BRANCH := $(shell git symbolic-ref --short -q HEAD)
 GIT_COMMIT_HASH := $(shell git rev-parse HEAD|cut -c 1-8)
-GO_FLAGS := -v -ldflags="-s -w -X 'github.com/tekintian/gvm/build.Build=$(BUILD_DATE)' -X 'github.com/tekintian/gvm/build.Commit=$(GIT_COMMIT_HASH)' -X 'github.com/tekintian/gvm/build.Branch=$(GIT_BRANCH)'"
+GO_FLAGS := -v -ldflags="-s -w -X 'github.com/tekintian/gvm/app_build.Build=$(BUILD_DATE)' -X 'github.com/tekintian/gvm/app_build.Commit=$(GIT_COMMIT_HASH)' -X 'github.com/tekintian/gvm/app_build.Branch=$(GIT_BRANCH)'"
 
 
 all: install test clean
 
 # 生成版本号（从 git tag）
 gen-version:
-	$(GO) run build/gen_version.go
+	$(GO) run app_build/gen_version.go
 
 build: gen-version
 	$(GO) build $(GO_FLAGS)

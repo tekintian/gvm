@@ -1,7 +1,7 @@
 {
     "version": "0.6.1",
     "tool": "go build -v -trimpath -ldflags '-s -w'",
-    "importpath": "github.com/tekintian/gvm/build",
+    "importpath": "github.com/tekintian/gvm/app_build",
     "variables": [
         {
             "variable": "Build",

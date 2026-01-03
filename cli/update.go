@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
-	"github.com/tekintian/gvm/build"
+	app_build "github.com/tekintian/gvm/app_build"
 	"github.com/tekintian/gvm/pkg/checksum"
 	"github.com/tekintian/gvm/pkg/errs"
 	"github.com/tekintian/gvm/pkg/sdk/github"
@@ -19,12 +19,12 @@ func update(*cli.Context) (err error) {
 	up := github.NewReleaseUpdater()
 
 	// 检查更新
-	latest, yes, err := up.CheckForUpdates(semver.MustParse(build.ShortVersion), "tekintian", "gvm")
+	latest, yes, err := up.CheckForUpdates(semver.MustParse(app_build.ShortVersion), "tekintian", "gvm")
 	if err != nil {
 		return cli.Exit(errstring(err), 1)
 	}
 	if !yes {
-		fmt.Printf("You are up to date! gvm v%s is the latest version.\n", build.ShortVersion)
+		fmt.Printf("You are up to date! gvm v%s is the latest version.\n", app_build.ShortVersion)
 		return nil
 	}
 	fmt.Printf("A new version of gvm(%s) is available\n", latest.TagName)
