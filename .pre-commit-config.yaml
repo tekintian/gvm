@@ -1,3 +1,23 @@
+# Pre-commit configuration file
+#
+# This file configures the pre-commit hooks for the project.
+# It uses the golangci-lint tool to lint the Go code.
+# install golangci-lint:
+#   $ go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
+#   $ golangci-lint --version
+#   $ golangci-lint run --timeout=5m
+#
+# Install pre-commit hooks:
+# pre-commit install
+# Run the pre-commit hooks on all files:
+# pre-commit run --all-files
+# Run the pre-commit hooks on a specific file:
+# pre-commit run --files myfile.go
+# Run the pre-commit hooks on a specific file and show the diff:
+# pre-commit run --files myfile.go --show-diff-on-failure
+# disable pre-commit hooks:
+# pre-commit uninstall
+#
 repos:
 -   repo: https://github.com/golangci/golangci-lint
     rev: v1.64.8
