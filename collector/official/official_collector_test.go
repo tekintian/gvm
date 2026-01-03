@@ -25,7 +25,7 @@ func getCollector() (*Collector, error) {
 	}, nil
 }
 func Test_stablePackages(t *testing.T) {
-	c, err := getCollector()
+	c, err := NewCollector("https://go.dev/dl/")
 	assert.Nil(t, err)
 	assert.NotNil(t, c)
 	items, err := c.StableVersions()

@@ -64,7 +64,7 @@ func (c *Collector) findPackages(table *goquery.Selection) (pkgs []*version.Pack
 		td := s.Find("td")
 		href := td.First().Find("a").AttrOr("href", "")
 		if strings.HasPrefix(href, "/") {
-			href = fmt.Sprintf("%s%s", strings.TrimRight(c.url, "/"), href)
+			href = fmt.Sprintf("%s://%s%s", c.pURL.Scheme,c.pURL.Host, href)
 		}
 		pkgs = append(pkgs, &version.Package{
 			FileName:  td.First().Find("a").Text(),
