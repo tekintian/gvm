@@ -89,6 +89,18 @@ go test -v ./...
 
 # 运行特定包的测试
 go test -v ./cli
+
+# 运行race test
+go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+
+# 运行代码检查
+# 安装代码提交预检查
+pre-commit install
+# 手动执行预检查啊
+pre-commit run --all-files
+
+# 禁用预检查
+pre-commit uninstall  # 或者直接删除配置  rm .git/hooks/pre-commit
 ```
 
 ## 开发流程

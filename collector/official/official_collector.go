@@ -59,15 +59,51 @@ func (c *Collector) loadDocument() (err error) {
 }
 
 func (c *Collector) findPackages(table *goquery.Selection) (pkgs []*version.Package) {
-	alg := strings.TrimSuffix(table.Find("thead").Find("th").Last().Text(), " Checksum") // 获取 table > thead > tr > 最后一个 th的文本，然后去除  Checksum
+	// 添加防御性检查
+	if table == nil || table.Length() == 0 {
+		return pkgs
+	}
+
+	// 确保找到thead和th元素
+	thead := table.Find("thead")
+	if thead.Length() == 0 {
+		return pkgs
+	}
+	ths := thead.Find("th")
+	if ths.Length() == 0 {
+		return pkgs
+	}
+	alg := strings.TrimSuffix(ths.Last().Text(), " Checksum")
+
 	table.Find("tbody").Find("tr").Each(func(i int, s *goquery.Selection) {
+		if s == nil {
+			return
+		}
+
 		td := s.Find("td")
-		href := td.First().Find("a").AttrOr("href", "")
+		// 确保有足够的td元素
+		if td.Length() < 6 {
+			return
+		}
+
+		// 确保有a元素
+		a := td.First().Find("a")
+		if a.Length() == 0 {
+			return
+		}
+
+		href := a.AttrOr("href", "")
 		if strings.HasPrefix(href, "/") {
-			href = fmt.Sprintf("%s://%s%s", c.pURL.Scheme,c.pURL.Host, href)
+			// 添加防御性检查，确保pURL字段不为nil
+			if c.pURL != nil {
+				href = fmt.Sprintf("%s://%s%s", c.pURL.Scheme, c.pURL.Host, href)
+			} else {
+				// 如果pURL为nil，使用默认的URL
+				href = fmt.Sprintf("https://go.dev%s", href)
+			}
 		}
 		pkgs = append(pkgs, &version.Package{
-			FileName:  td.First().Find("a").Text(),
+			FileName:  a.Text(),
 			URL:       href,
 			Kind:      td.Eq(1).Text(),
 			OS:        td.Eq(2).Text(),
@@ -77,7 +113,6 @@ func (c *Collector) findPackages(table *goquery.Selection) (pkgs []*version.Pack
 			Algorithm: alg,
 		})
 	})
-
 	return pkgs
 }
 
