@@ -3,7 +3,6 @@ package github
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -13,9 +12,9 @@ import (
 	"github.com/Masterminds/semver"
 	"github.com/go-resty/resty/v2"
 	"github.com/mholt/archiver/v3"
+	"github.com/tekintian/go-selfupdate"
 	"github.com/tekintian/gvm/pkg/checksum"
 	myhttp "github.com/tekintian/gvm/pkg/http"
-	"github.com/voidint/go-update"
 )
 
 // Release 版本
@@ -121,7 +120,7 @@ func (up ReleaseUpdater) Apply(rel *Release,
 		return nil
 	}
 	defer dstFile.Close()
-	return update.Apply(dstFile, update.Options{})
+	return selfupdate.Apply(dstFile, selfupdate.Options{})
 }
 
 // unarchive 解压缩至目标目录下并返回首个解压后的文件
@@ -130,7 +129,7 @@ func (up ReleaseUpdater) unarchive(srcFile, dstDir string) (dstFile string, err 
 		return "", err
 	}
 	// 找到解压缩后的目标文件
-	fis, _ := ioutil.ReadDir(dstDir)
+	fis, _ := os.ReadDir(dstDir)
 	for _, fi := range fis {
 		if strings.HasSuffix(srcFile, fi.Name()) {
 			continue

@@ -14,8 +14,8 @@ require (
 	github.com/mholt/archiver/v3 v3.5.1
 	github.com/schollz/progressbar/v3 v3.11.0
 	github.com/stretchr/testify v1.8.0
+	github.com/tekintian/go-selfupdate v1.0.0
 	github.com/urfave/cli/v2 v2.16.3
-	github.com/voidint/go-update v1.0.0
 	golang.org/x/text v0.3.7
 )
 
