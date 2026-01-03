@@ -46,7 +46,6 @@ docker-compose.yml
 Thumbs.db
 
 # Build files
-app_build/version.go
 dist/
 *.tar.gz
 *.zip
